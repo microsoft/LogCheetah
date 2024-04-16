@@ -1,14 +1,11 @@
 # Project
 
-> This repo has been populated by an initial template to help get you started. Please
-> make sure to update the content to build a great experience for community-building.
+LogCheetah is a gui tool for viewing column-based log data, optimized for interacting with large volumes (millions of rows) of data in memory at once.
 
-As the maintainer of this project, please make a few updates:
-
-- Improving this README.MD file to provide a great experience
-- Updating SUPPORT.MD with content about this project's support experience
-- Understanding the security reporting process in SECURITY.MD
-- Remove this section from the README
+Supported file types:
+- Json: Data is flattened into columns named after the parent node names.
+- Comma/Space/Tab/Pipe-seperated values.
+- Trx: VsTest result xml files.  This type is not performance optimized.
 
 ## Contributing
 
