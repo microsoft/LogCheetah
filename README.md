@@ -1,11 +1,19 @@
 # Project
 
-LogCheetah is a gui tool for viewing column-based log data, optimized for interacting with large volumes (millions of rows) of data in memory at once.
+LogCheetah is a windows gui tool for viewing column-based log data, optimized for interacting with large volumes (millions of rows) of data in memory at once.
 
-Supported file types:
+Supported data types:
 - Json: Data is flattened into columns named after the parent node names.
 - Comma/Space/Tab/Pipe-seperated values.
 - Trx: VsTest result xml files.  This type is not performance optimized.
+
+## Building
+
+1. Install [vcpkg](https://github.com/microsoft/vcpkg/blob/master/README.md#getting-started)
+2. Run: `mkdir build & cd build`
+3. Run: `cmake ..`
+4. Run `cmake --build . --config=Release`
+
 
 ## Contributing
 
