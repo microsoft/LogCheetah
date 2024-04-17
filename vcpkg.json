@@ -1,0 +1,8 @@
+{
+    "name":"unused",
+    "dependencies":
+    [
+        "glbinding",
+        "glm"
+    ]
+}
