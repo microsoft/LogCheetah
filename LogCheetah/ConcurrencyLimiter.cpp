@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 #include "ConcurrencyLimiter.h"
 
 ConcurrencyLimiter::ConcurrencyLimiter(size_t maxConcurrency)

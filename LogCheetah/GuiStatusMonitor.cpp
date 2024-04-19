@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 #include "GuiStatusMonitor.h"
 #include "Globals.h"
 #include "WinMain.h"

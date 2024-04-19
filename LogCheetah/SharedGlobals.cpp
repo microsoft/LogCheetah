@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 #include "SharedGlobals.h"
 #include <Windows.h>
 #include <Psapi.h>

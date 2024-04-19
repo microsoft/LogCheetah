@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 #include "SharedGlobals.h"
 #include "TRXParser.h"
 #include "StringUtils.h"

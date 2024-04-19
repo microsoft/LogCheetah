@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 #include "DialogBlocklistedColumnsEditor.h"
 
 #include <Windows.h>

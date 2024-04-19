@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 #include "GenericTextLogParseRouter.h"
 #include "GuiStatusMonitor.h"
 #include "LogFormatter.h"

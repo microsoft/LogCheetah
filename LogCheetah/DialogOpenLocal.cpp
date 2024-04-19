@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 #include "DialogOpenLocal.h"
 #include "DialogPickLogFormat.h"
 #include "WinMain.h"

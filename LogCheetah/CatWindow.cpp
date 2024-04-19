@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 #include <Windows.h>
 #include <Windowsx.h>
 #include <CommCtrl.h>

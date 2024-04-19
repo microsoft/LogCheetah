@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 #include "ObtainParseCoordinator.h"
 #include "GuiStatusMonitor.h"
 #include "ConcurrencyLimiter.h"

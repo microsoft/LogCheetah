@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 #include "XmlLexicon.h"
 #include "StringUtils.h"
 #include <sstream>

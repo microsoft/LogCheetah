@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 // These are based on CommonSchema's "correlation vector" concepts.  See also: https://github.com/microsoft/CorrelationVector
 
 #include "DialogQosVisualizer.h"
