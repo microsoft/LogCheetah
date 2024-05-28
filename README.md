@@ -9,10 +9,12 @@ Supported data types:
 
 ## Building
 
-1. Install [vcpkg](https://github.com/microsoft/vcpkg/blob/master/README.md#getting-started)
-2. Run: `mkdir build & cd build`
-3. Run: `cmake ..`
-4. Run `cmake --build . --config=Release`
+This repo uses vcpkg as a submodule.  It will need bootstraped and installed prior to building normally.  Complete build steps:
+1. ```.\vcpkg\bootstrap-vcpkg.bat```
+1. ```.\vcpkg\vcpkg install --triplet x64-windows```
+1. ```mkdir build & cd build```
+1. ```cmake ..```
+1. ```cmake --build . --config=Release```
 
 
 ## Contributing

@@ -1,8 +1,8 @@
 {
-    "name":"unused",
-    "dependencies":
-    [
-        "glbinding",
-        "glm"
-    ]
+  "name": "unused",
+  "dependencies": [
+    "glbinding",
+    "glm"
+  ],
+  "builtin-baseline": "dee924de74e81388140a53c32a919ecec57d20ab"
 }
