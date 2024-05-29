@@ -2,12 +2,13 @@ on:
   push:
 
 permissions:
-  contents: write-all
+  contents: write
 
 jobs:
   build:
     name: Build on ${{matrix.os}}
     runs-on: ${{matrix.os}}
+    contents: write-all
     strategy:
       matrix:
         os: [windows-latest]
