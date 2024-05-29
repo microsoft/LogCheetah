@@ -13,7 +13,7 @@ jobs:
     - name: Install cmake
       uses: lukka/get-cmake@latest
 
-    - name Install windows 10 sdk
+    - name: Install windows 10 sdk
       uses: GuillaumeFalourd/setup-windows10-sdk-action@v2
 
     - name: Check out repository
