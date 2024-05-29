@@ -1,5 +1,5 @@
 on:
-  push:
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -59,6 +59,7 @@ jobs:
     name: Setup Release
     needs: build
     runs-on: windows-latest
+    permissions: write-all
 
     steps:
     - name: Download Artifacts
