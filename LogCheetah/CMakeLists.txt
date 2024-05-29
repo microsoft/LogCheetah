@@ -9,8 +9,6 @@ set(CMAKE_CXX_STANDARD 20)
 find_package(glbinding CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(OpenGL REQUIRED)
-find_library(GDIPLUS gdiplus)
-find_library(GDI32 gdi32)
 
 #Compile
 add_executable(LogCheetah WIN32
@@ -49,9 +47,9 @@ target_link_libraries(LogCheetah
     PRIVATE glbinding::glbinding
     PRIVATE glbinding::glbinding-aux
     PRIVATE glm::glm
-    PRIVATE ${GDIPLUS}
-    PRIVATE ${GDI32}
     PRIVATE ${OPENGL_LIBRARIES}
+    gdiplus
+    gdi32
     wsock32
     ws2_32
     comctl32
