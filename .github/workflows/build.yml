@@ -28,7 +28,8 @@ jobs:
 
     - name: Build LogCheetah
       run: |
-        mkdir build & cd build
+        mkdir build
+        cd build
         cmake ..
         cmake --build . --config=Release
 
