@@ -1,6 +1,9 @@
 on:
   push:
 
+permissions:
+  contents: write-all
+
 jobs:
   build:
     name: Build on ${{matrix.os}}
