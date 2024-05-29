@@ -1,0 +1,67 @@
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build on ${{matrix.os}}
+    runs-on: ${{matrix.os}}
+    strategy:
+      matrix:
+        os: [windows-latest]
+
+    steps:
+    - name: Install cmake
+      uses: lukka/get-cmake@latest
+
+    - name: Check out repository
+      uses: actions/checkout@v3
+
+    - name: Bootstrap vcpkg
+      run:
+        .\vcpkg\bootstrap-vcpkg.bat
+
+    - name: Vcpkg Build
+      run:
+        .\vcpkg\vcpkg install --triplet x64-windows
+
+    - name: Build LogCheetah
+      run: |
+        mkdir build & cd build
+        cmake ..
+        cmake --build . --config=Release
+
+    - name: Zip Windows Release
+      if: matrix.os == 'windows-latest'
+      uses: vimtor/action-zip@v1
+      with:
+        files: build\LogCheetah\Release
+        recursive: true
+        dest: buildZipped\\LogCheetah-Windows.zip
+
+    - name: Upload Windows Artifact
+      if: matrix.os == 'windows-latest'
+      uses: actions/upload-artifact@v3
+      with:
+        name: files
+        path: buildZipped\\LogCheetah-Windows.zip
+
+  create_release:
+    name: Setup Release
+    needs: build
+    runs-on: windows-latest
+
+    steps:
+    - name: Download Artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: files
+
+    - name: Create Draft Release
+      uses: softprops/action-gh-release@v1
+      with:
+        draft: true
+        prerelease: true
+        name: v0.0.0 NEW DRAFT RELEASE
+        generate_release_notes: true
+        files: |
+          LogCheetah-Windows.zip
