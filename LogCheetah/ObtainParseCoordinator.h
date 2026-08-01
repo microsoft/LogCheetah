@@ -14,6 +14,7 @@ struct ObtainerSource
     std::function<std::vector<char>(AppStatusMonitor &monitor)> Obtain;
     LogType LogTypeIfKnown = LogType::Unknown;
     std::string AdditionalSchemaData;
+    std::string SourcePath;
 };
 
 LogCollection ObtainRawDataAndParse(const std::string &obtainDescription, std::vector<ObtainerSource> obtainers, size_t maxObtainParallelism, const ParserFilter &filter);

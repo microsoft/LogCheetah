@@ -462,13 +462,11 @@ LRESULT CALLBACK MainWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPar
     break;
     case WM_FIRSTRUN_PROMPTS:
     {
+        // We used to prompt the user whether to run this test.  It's so fast on modern hardware though that it takes longer to click yes/no than to just run the test itself.  So just always do it now if needed.
         if (!Preferences::HasTestedParallelism)
         {
-            if (IDYES == MessageBox(hwnd, "LogCheetah has never tested the ideal parallelism on this machine.\r\n\r\nTest it now?\r\n(You can adjust this later under the Setup dialog)", "Performance Optimization", MB_YESNO))
-            {
-                Preferences::HasTestedParallelism = true;
-                RunTestParallelismDialog();
-            }
+            Preferences::HasTestedParallelism = true;
+            RunTestParallelismDialog();
         }
         break;
     }
