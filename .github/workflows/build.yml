@@ -1,5 +1,10 @@
 on:
   workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag for the draft release'
+        required: false
+        default: v0.0.0
 
 permissions:
   contents: write
@@ -72,7 +77,9 @@ jobs:
       with:
         draft: true
         prerelease: true
-        name: v0.0.0 NEW DRAFT RELEASE
+        tag_name: ${{ inputs.tag }}
+        target_commitish: ${{ github.sha }}
+        name: ${{ inputs.tag }} NEW DRAFT RELEASE
         generate_release_notes: true
         files: |
           LogCheetah-Windows.zip
