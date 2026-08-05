@@ -12,6 +12,8 @@ find_package(OpenGL REQUIRED)
 
 #Compile
 add_executable(LogCheetah WIN32
+    CatResources.cpp
+    CatResources.rc
     CatWindow.cpp
     ConcurrencyLimiter.cpp
     DebugWindow.cpp
@@ -50,13 +52,14 @@ target_link_libraries(LogCheetah
     PRIVATE ${OPENGL_LIBRARIES}
     gdiplus
     gdi32
+    shlwapi
     wsock32
     ws2_32
     comctl32
     )
 
-#Extra files needed at run-time
+#Extra files needed at run-time. The cat art isn't here - it's compiled into the .exe as
+#resources by CatResources.rc, so there's no litter of loose .png files to copy alongside.
 add_custom_command(TARGET LogCheetah POST_BUILD
-    COMMAND "${CMAKE_COMMAND}" -E copy_directory_if_different "${PROJECT_SOURCE_DIR}/cats" "$<TARGET_FILE_DIR:LogCheetah>/cats"
     COMMAND "${CMAKE_COMMAND}" -E copy_directory_if_different "${PROJECT_SOURCE_DIR}/shaders" "$<TARGET_FILE_DIR:LogCheetah>/shaders"
     )
