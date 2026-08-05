@@ -21,7 +21,7 @@ jobs:
       uses: GuillaumeFalourd/setup-windows10-sdk-action@v2
 
     - name: Check out repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v7
       with:
         submodules: 'true'
 
@@ -50,7 +50,7 @@ jobs:
 
     - name: Upload Windows Artifact
       if: matrix.os == 'windows-latest'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v7
       with:
         name: files
         path: buildZipped\\LogCheetah-Windows.zip
@@ -63,12 +63,12 @@ jobs:
 
     steps:
     - name: Download Artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v8
       with:
         name: files
 
     - name: Create Draft Release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v3
       with:
         draft: true
         prerelease: true
