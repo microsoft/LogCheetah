@@ -128,7 +128,7 @@ LogCollection ObtainRawDataAndParse(const std::string &obtainDescription, std::v
                     statusLogParse.Section().PartIndex(obtainerIndex).AddDebugOutput("Loading additional schema data");
                     parser.LoadSchemaData(DebugStatusOnlyMonitor::Instance, obtainers[obtainerIndex].AdditionalSchemaData);
                 }
-                finalLogs = parser.ProcessRawData(statusLineParse ? (AppStatusMonitor&)statusLineParse->Section().PartIndex(obtainerIndex) : (AppStatusMonitor&)DebugStatusOnlyMonitor::Instance, statusLogParse.Section().PartIndex(obtainerIndex), DebugStatusOnlyMonitor::Instance, std::move(finalLogs), std::move(data), filter);
+                finalLogs = parser.ProcessRawData(statusLineParse ? (AppStatusMonitor&)statusLineParse->Section().PartIndex(obtainerIndex) : (AppStatusMonitor&)DebugStatusOnlyMonitor::Instance, statusLogParse.Section().PartIndex(obtainerIndex), DebugStatusOnlyMonitor::Instance, std::move(finalLogs), std::move(data), filter, obtainers[obtainerIndex].SourcePath);
             }
 
             //are we done?

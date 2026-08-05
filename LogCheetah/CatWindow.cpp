@@ -4,6 +4,8 @@
 #include <Windows.h>
 #include <Windowsx.h>
 #include <CommCtrl.h>
+#include <Shlwapi.h>
+#include <span>
 #include <string>
 #include <chrono>
 using namespace std::chrono_literals;
@@ -13,6 +15,7 @@ using namespace std::chrono_literals;
 #include <gdiplus.h>
 
 #include "CatWindow.h"
+#include "CatResources.h"
 #include "Preferences.h"
 
 namespace
@@ -36,16 +39,33 @@ namespace
     std::vector<Gdiplus::Image*> grabbedImagesR;
     std::vector<Gdiplus::Image*> grabbedImagesL;
 
-    std::tuple<std::vector<Gdiplus::Image*>, std::vector<Gdiplus::Image*>> LoadImageSets(const std::wstring nameBase)
+    //GDI+ decodes lazily, so the stream behind an Image has to outlive it. The frames stick around
+    //for the life of the process anyway, so we just hang onto the streams rather than pretend otherwise.
+    std::vector<IStream*> frameStreams;
+
+    Gdiplus::Image* LoadEmbeddedImage(const std::string &name)
+    {
+        std::span<const std::byte> bytes = GetEmbeddedCatAsset(name);
+        if (bytes.empty())
+            return nullptr;
+
+        IStream* stream = SHCreateMemStream((const BYTE*)bytes.data(), (UINT)bytes.size());
+        if (!stream)
+            return nullptr;
+
+        frameStreams.emplace_back(stream);
+        return Gdiplus::Image::FromStream(stream);
+    }
+
+    std::tuple<std::vector<Gdiplus::Image*>, std::vector<Gdiplus::Image*>> LoadImageSets(const std::string nameBase)
     {
         std::vector<Gdiplus::Image*> imagesR;
         std::vector<Gdiplus::Image*> imagesL;
         for (int i = 1; i <= 32; ++i)
         {
-            std::wstring name = L"cats\\" + nameBase + std::to_wstring(i) + L".png";
-            Gdiplus::Image* newImageR = Gdiplus::Image::FromFile(name.c_str());
+            Gdiplus::Image* newImageR = LoadEmbeddedImage(nameBase + std::to_string(i) + ".png");
             if (!newImageR || newImageR->GetLastStatus() != Gdiplus::Ok)
-                break;;
+                break;
 
             imagesR.emplace_back(newImageR);
 
@@ -311,6 +331,26 @@ namespace
             gdip.DrawImage(frame, 0, 0, 64, 64);
     }
 
+    //Anonymous Gregorian computus. Easter Sunday is always in March or April.
+    void EasterSunday(int year, int &month, int &day)
+    {
+        const int a = year % 19;
+        const int b = year / 100;
+        const int c = year % 100;
+        const int d = b / 4;
+        const int e = b % 4;
+        const int f = (b + 8) / 25;
+        const int g = (b - f + 1) / 3;
+        const int h = (19 * a + b - d - g + 15) % 30;
+        const int i = c / 4;
+        const int k = c % 4;
+        const int l = (32 + 2 * e + 2 * i - h - k) % 7;
+        const int m = (a + 11 * h + 22 * l) / 451;
+
+        month = (h + l - 7 * m + 114) / 31;
+        day = ((h + l - 7 * m + 114) % 31) + 1;
+    }
+
     void CALLBACK CatTimerProc(HWND, UINT, UINT_PTR, DWORD)
     {
         if (!hwndCat)
@@ -368,16 +408,33 @@ void InitCatWindow(HWND followTarget)
     if (!Preferences::AllowCats)
         return;
 
-    std::wstring catTheme = Preferences::ForceCats ? L"plain" : L"";
+    std::string catTheme = Preferences::ForceCats ? "plain" : "";
 
     SYSTEMTIME startupTime = { 0 };
     GetLocalTime(&startupTime);
-    if (startupTime.wMonth == 4 && startupTime.wDay == 1)
-        catTheme = L"plain";
+
+    //Easter moves, so it gets computed rather than hardcoded.
+    int easterMonth = 0, easterDay = 0;
+    EasterSunday(startupTime.wYear, easterMonth, easterDay);
+    const int today = startupTime.wMonth * 31 + startupTime.wDay;
+    const int easter = easterMonth * 31 + easterDay;
+
+    if (startupTime.wMonth == 3 && startupTime.wDay >= 16 && startupTime.wDay <= 18)
+        catTheme = "stpat";
+    else if (today >= easter - 3 && today <= easter + 1)
+        catTheme = "easter";
+    else if (startupTime.wMonth == 5 && startupTime.wDay >= 3 && startupTime.wDay <= 5)
+        catTheme = "may4";
+    else if (startupTime.wMonth == 7 && startupTime.wDay >= 3 && startupTime.wDay <= 5)
+        catTheme = "july4";
+    else if (startupTime.wMonth == 9 && startupTime.wDay >= 18 && startupTime.wDay <= 20)
+        catTheme = "pirate";
     else if (startupTime.wMonth == 10 && startupTime.wDay >= 27 && startupTime.wDay <= 31)
-        catTheme = L"halloween";
+        catTheme = "halloween";
     else if (startupTime.wMonth == 12 && startupTime.wDay >= 21 && startupTime.wDay <= 27)
-        catTheme = L"xmas";
+        catTheme = "xmas";
+    else if (startupTime.wMonth == 4 && startupTime.wDay == 1)
+        catTheme = "plain"; //april fools - the original joke that started this all
 
     if (catTheme.empty())
         return;
@@ -392,11 +449,11 @@ void InitCatWindow(HWND followTarget)
             ULONG_PTR gdiPlusToken;
             Gdiplus::GdiplusStartup(&gdiPlusToken, &gdiPlusStartup, nullptr);
 
-            std::tie(idleImagesR, idleImagesL) = LoadImageSets(catTheme + L"\\idle");
-            std::tie(fallingImagesR, fallingImagesL) = LoadImageSets(catTheme + L"\\falling");
-            std::tie(climbingImagesR, climbingImagesL) = LoadImageSets(catTheme + L"\\climbing");
-            std::tie(walkingImagesR, walkingImagesL) = LoadImageSets(catTheme + L"\\walking");
-            std::tie(grabbedImagesR, grabbedImagesL) = LoadImageSets(catTheme + L"\\grabbed");
+            std::tie(idleImagesR, idleImagesL) = LoadImageSets(catTheme + "/idle");
+            std::tie(fallingImagesR, fallingImagesL) = LoadImageSets(catTheme + "/falling");
+            std::tie(climbingImagesR, climbingImagesL) = LoadImageSets(catTheme + "/climbing");
+            std::tie(walkingImagesR, walkingImagesL) = LoadImageSets(catTheme + "/walking");
+            std::tie(grabbedImagesR, grabbedImagesL) = LoadImageSets(catTheme + "/grabbed");
         });
 
         // if we couldn't load images for some weird reason, just bail on the whole thing

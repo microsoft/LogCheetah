@@ -515,7 +515,7 @@ bool ParserFilter::PassesLineFilters(const ExternalSubstring<const char> &line) 
     return true;
 }
 
-LogCollection ParserInterface::ProcessRawData(AppStatusMonitor &monitorLineParse, AppStatusMonitor &monitorLogParser, AppStatusMonitor &monitorMergeCompact, LogCollection &&existingLogsToMerge, std::vector<char> &&rawDataToConsume, const ParserFilter &filter)
+LogCollection ParserInterface::ProcessRawData(AppStatusMonitor &monitorLineParse, AppStatusMonitor &monitorLogParser, AppStatusMonitor &monitorMergeCompact, LogCollection &&existingLogsToMerge, std::vector<char> &&rawDataToConsume, const ParserFilter &filter, const std::string &sourcePath)
 {
     if (monitorLineParse.IsCancelling())
         return LogCollection();
@@ -535,7 +535,7 @@ LogCollection ParserInterface::ProcessRawData(AppStatusMonitor &monitorLineParse
     {
         monitorLineParse.Complete();
 
-        newLogs = ParseRaw(monitorLogParser, std::move(rawDataToConsume), filter);
+        newLogs = ParseRaw(monitorLogParser, std::move(rawDataToConsume), filter, sourcePath);
     }
 
     newLogs.Parser = this;

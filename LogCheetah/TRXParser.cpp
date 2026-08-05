@@ -26,7 +26,8 @@ namespace
     const uint16_t COLUMNINDEX_TESTASSEMBLY = 7;
     const uint16_t COLUMNINDEX_TESTCATEGORY = 8;
     const uint16_t COLUMNINDEX_DESCRIPTION = 9;
-    const uint16_t COLUMNINDEX_OUTPUT = 10;
+    const uint16_t COLUMNINDEX_SOURCEPATH = 10;
+    const uint16_t COLUMNINDEX_OUTPUT = 11;
     const uint16_t COLUMNINDEX_MAXFIXED = COLUMNINDEX_OUTPUT;
 
     // Must be treated read-only
@@ -170,7 +171,7 @@ namespace
 
 namespace TRX
 {
-    LogCollection ParseLogs(AppStatusMonitor &monitor, const std::vector<char> &rawDataToConsume, const ParserFilter &filter)
+    LogCollection ParseLogs(AppStatusMonitor &monitor, const std::vector<char> &rawDataToConsume, const ParserFilter &filter, const std::string &sourcePath)
     {
         LogCollection logs;
         logs.IsRawRepresentationValid = false;
@@ -185,6 +186,7 @@ namespace TRX
         logs.Columns.emplace_back("Assembly");
         logs.Columns.emplace_back("Category");
         logs.Columns.emplace_back("Description");
+        logs.Columns.emplace_back("SourcePath");
         logs.Columns.emplace_back("Output");
 
         monitor.SetControlFeatures(true);
@@ -236,6 +238,7 @@ namespace TRX
                             }
                         }
 
+                        AddColumnExtraData(columnData, extraData, COLUMNINDEX_SOURCEPATH, sourcePath);
                         AddColumnExtraData(columnData, extraData, COLUMNINDEX_OUTPUT, resultsBlob);
 
                         logs.Lines.emplace_back(std::string(), extraData, std::vector<LogEntryColumn>(), columnData);
@@ -287,6 +290,7 @@ namespace TRX
                                         WalkAllChildOutput(output, unitTestResultChild);
                                 }
 
+                                AddColumnExtraData(columnData, extraData, COLUMNINDEX_SOURCEPATH, sourcePath);
                                 AddColumnExtraData(columnData, extraData, COLUMNINDEX_OUTPUT, output);
 
                                 logs.Lines.emplace_back(std::string(), extraData, std::vector<LogEntryColumn>(), columnData);

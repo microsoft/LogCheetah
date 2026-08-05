@@ -110,6 +110,7 @@ void DoLoadLogsFromFileBatchWorker(const std::vector<std::string> &files, std::v
         };
         obtainers.back().LogTypeIfKnown = fileLogType[fileNumber];
         obtainers.back().AdditionalSchemaData = additionalSchemas[fileNumber];
+        obtainers.back().SourcePath = std::filesystem::path(files[fileNumber]).parent_path().string();
     }
 
     auto newLogs = ObtainRawDataAndParse("Reading " + std::to_string(files.size()) + " Files from Disk", obtainers, 1, ParserFilter());

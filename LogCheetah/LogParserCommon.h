@@ -251,7 +251,7 @@ public:
     }
 
     inline static ParserInterface MakeBinaryParser(const std::string &name,
-        std::function<LogCollection(AppStatusMonitor &monitor, const std::vector<char> &rawDataToConsume, const ParserFilter &filter)> parseLogs)
+        std::function<LogCollection(AppStatusMonitor &monitor, const std::vector<char> &rawDataToConsume, const ParserFilter &filter, const std::string &sourcePath)> parseLogs)
     {
         ParserInterface pi { name };
         pi.ParseRaw = parseLogs;
@@ -266,7 +266,7 @@ public:
     bool ProducesFakeJson = false;
 
     //call one of these to parse sets of data
-    LogCollection ProcessRawData(AppStatusMonitor &monitorLineParse, AppStatusMonitor &monitorLogParser, AppStatusMonitor &monitorMergeCompact, LogCollection &&existingLogsToMerge, std::vector<char> &&rawDataToConsume, const ParserFilter &filter);
+    LogCollection ProcessRawData(AppStatusMonitor &monitorLineParse, AppStatusMonitor &monitorLogParser, AppStatusMonitor &monitorMergeCompact, LogCollection &&existingLogsToMerge, std::vector<char> &&rawDataToConsume, const ParserFilter &filter, const std::string &sourcePath = std::string());
 
     //optional schema management
     std::function<void(AppStatusMonitor &monitor)> PreloadKnownSchemas;
@@ -279,12 +279,12 @@ public:
     inline static void NoopPreloadKnownSchemas(AppStatusMonitor &monitor) {}
     inline static bool NoopPreFilterLine(const ExternalSubstring<const char> &line, const ParserFilter &filter) { return true; }
     inline static void NoopPostFilterLines(std::vector<LogEntry> &lines, const std::vector<ColumnInformation> &columns, const ParserFilter &filter) {}
-    inline static LogCollection NoopParseRaw(AppStatusMonitor &monitor, const std::vector<char> &rawData, const ParserFilter &filter) { return LogCollection(); }
+    inline static LogCollection NoopParseRaw(AppStatusMonitor &monitor, const std::vector<char> &rawData, const ParserFilter &filter, const std::string &sourcePath) { return LogCollection(); }
     inline static LogCollection NoopParseLines(AppStatusMonitor &monitor, std::vector<std::string> &&linesToConsume) { return LogCollection(); }
 
 private:
     //for text-line-based logs ParseRaw will call ParseRawToLines then call ParseLines followed by PostFilterLines.  For binary-based logs ParseRaw will parse and filter, leaving ParseLines as a Noop.
-    std::function<LogCollection(AppStatusMonitor &monitor, std::vector<char> &&rawDataToConsume, const ParserFilter &filter)> ParseRaw;
+    std::function<LogCollection(AppStatusMonitor &monitor, std::vector<char> &&rawDataToConsume, const ParserFilter &filter, const std::string &sourcePath)> ParseRaw;
     std::function<LogCollection(AppStatusMonitor &monitor, std::vector<std::string> &&linesToConsume)> ParseLines;
 
     //exactly one of these will be implemented, the other will be noop
