@@ -23,7 +23,7 @@ jobs:
       uses: lukka/get-cmake@latest
 
     - name: Install windows 10 sdk
-      uses: GuillaumeFalourd/setup-windows10-sdk-action@9979bedbf6ae74f038cc338622ba015942ed2408 # v2.4
+      uses: GuillaumeFalourd/setup-windows10-sdk-action@d4f23d08ae372a72e47dc2616c9ec8c951f853ec # v2.5
 
     - name: Check out repository
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
